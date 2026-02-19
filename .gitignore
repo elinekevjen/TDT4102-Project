@@ -10,3 +10,6 @@ build/
 
 # Mac system files
 .DS_Store
+
+# VSCode settings (optional)
+.vscode/
