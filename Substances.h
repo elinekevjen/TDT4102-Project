@@ -17,19 +17,27 @@ public:
 
 };
 
-class Acidic : public Substance{
-
+class Acid : public Substance{
+public:
+    Acid(std::string name, std::string formula);
+    std::string getCategory() const override;
 };
 
 
 class Basic : public Substance{
-
+public:
+    Basic(std::string name, std::string formula);
+    std::string getCategory() const override;
 };
 
 class Neutral : public Substance{
-
+public:
+    Neutral(std::string name, std::string formula);
+    std::string getCategory() const override;
 };
 
 class Inorganic : public Substance{
-
+public:
+    Inorganic(std::string name, std::string formula);
+    std::string getCategory() const override;
 };
