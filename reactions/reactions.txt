@@ -1,0 +1,3 @@
+HCl;NaOH;Reaksjon;Nøytralisering;Temperaturen øker
+AgNO3;NaCl;Reaksjon;Bunnfall;Hvitt bunnfall dannes
+H2O;NaCl;Ingen reaksjon;Oppløsning;Saltet løses opp
