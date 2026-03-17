@@ -15,6 +15,32 @@ std::string Substance::getCategory() const {
     return "Unknown";
 }
 
+std::unique_ptr<Substance> createSubstanceFromLine(const std::string& line){
+
+    std::stringstream ss(line);
+    std::string type;
+    std::string name;
+    std::string formula;
+
+    std::getline(ss, type, ';');
+    std::getline(ss, name, ';');
+    std::getline(ss, formula, ';');
+
+    if (type == "Acid") {
+        return std::make_unique<Acid>(name, formula);
+    }
+    else if (type == "Basic") {
+        return std::make_unique<Basic>(name, formula);
+    }
+    else if (type == "inorganic") {
+        return std::make_unique<Inorganic>(name, formula);
+    }
+    else{
+        return std::make_unique<Neutral>(name, formula);
+    }
+
+}
+
 Acid::Acid(std::string name, std::string formula)
     : Substance{name, formula} {}
 

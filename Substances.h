@@ -1,5 +1,10 @@
 #pragma once
 #include "std_lib_facilities.h"
+#include <string>
+#include <iostream>
+#include <filesystem>
+#include <sstream>
+#include <fstream>
 
 class Substance{
     /*
@@ -14,8 +19,9 @@ public:
     std::string getName() const;
     std::string getFormula() const;
     virtual std::string getCategory() const;
-
 };
+
+std::unique_ptr<Substance> createSubstanceFromLine(const std::string& line);
 
 class Acid : public Substance{
 public:
