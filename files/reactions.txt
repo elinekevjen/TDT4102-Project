@@ -1,3 +1,6 @@
 HCl;NaOH;Reaksjon;Nøytralisering;Temperaturen øker
 AgNO3;NaCl;Reaksjon;Bunnfall;Hvitt bunnfall dannes
-H2O;NaCl;Ingen reaksjon;Oppløsning;Saltet løses opp
+H2O;NaCl;Ingen reaksjon;Oppløsning;Du har laget saltvann, gratulerer!
+Mg;AgNO3;Reaksjon;Eksplosjon;Det ekspoderer!
+HCl;Mg;Reaksjon;Gassutvikling;Det bobler over!
+

@@ -4,7 +4,7 @@
 Images::Images() 
     : backgroundLab("visuals/laboratory.png"),
      backgroundJournal("visuals/journal.png"),
-     flask("visuals/kolbe.png"),
+     flask("visuals/Kolbe2.png"),
      tubeGreen("visuals/laboratory.jpeg"),
      tubeBlue("visuals/laboratory.jpeg"),
      tubeYellow("visuals/laboratory.jpeg"),
@@ -30,34 +30,36 @@ bool SubstanceButton::contains(TDT4102::Point point) const {
 }
 
 LabWindow::LabWindow()
-      : TDT4102::AnimationWindow{100,100,800, 600, "Virituell kjemilab"} {}
+      : TDT4102::AnimationWindow{100,100, 830, 620, "Kjemilab"},
+      reactionButton(TDT4102::Point{60,270}, 150, 50, "Kjør reaksjon!")  {
+            drawReactionButton();
+            getSubstances();
+            setupSubstanceButtons();
+            reactionButton.setCallback([this] {startReaction(); });
+}
 
 void LabWindow::getSubstances(){
     std::ifstream ifs("files/substances.txt");
     std::string line;
     
-    std::vector<std::unique_ptr<Substance>> subs;
     while (std::getline(ifs, line)) {
-        subs.push_back(createSubstanceFromLine(line));
+        substances.push_back(createSubstanceFromLine(line));
     }
 }
 
 void LabWindow::setupSubstanceButtons(){
-      int startX = 180;
-      int y = 480;
-      int gap = 90;
+      for (int i = 0; i <= static_cast<int>(substances.size())-1; i++) {
+            substanceButtons.push_back({{startX + i*gap , y}, flaskWidth, flaskHeight, substances.at(i).get()});
+      }
+}
 
-            for (int i = 0; i < static_cast<int>(substances.size()); i++) {
-                  substanceButtons.push_back({{startX + i*gap,y}, flaskWidth, flaskHeight, substances.at(i).get()});
-            }
-
-            for (const auto& button : substanceButtons) {
-                  if (button.substance != nullptr) {
-                  draw_image(button.pos, images.flask, button.width, button.height);
-                  draw_text({button.pos.x-10, button.pos.y + button.height + 20}, button.substance->getName());
+void LabWindow::drawSubstanceButtons() {
+      for (const auto& button : substanceButtons) {
+            if (button.substance != nullptr) {
+            draw_image(button.pos, images.flask, button.width, button.height);
+            draw_text({button.pos.x-10, button.pos.y + button.height + 10}, button.substance->getName());
             }
       }
-
 }
 
 void LabWindow::click(TDT4102::Point clickPos){
@@ -70,14 +72,22 @@ void LabWindow::click(TDT4102::Point clickPos){
 }
 
 void LabWindow::selectSubstance(Substance* substance){
-      if (selectedSubstance1 == nullptr){
-            selectedSubstance1 = substance;
-      } else if (selectedSubstance2 == nullptr){
-            selectedSubstance2 = substance;
+      if (substance == nullptr){
+            return;
+      } 
+      if (selectingFirst){
+           selectedSubstance1 = substance;
+           if (selectedSubstance2 == selectedSubstance1) {
+                  selectedSubstance2 = nullptr;
+           }
+
       } else {
-            selectedSubstance1 = substance;
-            selectedSubstance2 = nullptr;
+            if (substance == selectedSubstance1) {
+                  return;
+            }
+            selectedSubstance2 = substance;
       }
+      selectingFirst = !selectingFirst;
 }
 
 void LabWindow::drawSelectedSubstances(){
@@ -94,20 +104,47 @@ void LabWindow::drawSelectedSubstances(){
       } else {
             text2 += "Ingen valgt";
       }
-
+      draw_rectangle({60,180}, 180, 80, TDT4102::Color::white, TDT4102::Color::navy);
       draw_text({60,180}, text1);
       draw_text({60,230}, text2);
 }
 
-void LabWindow::drawLab() {
-    draw_image({0,0}, images.backgroundLab, width(), height());
-    draw_text({100,80}, "Velkommen til kjemilab!", TDT4102::Color::yellow, 60, TDT4102::Font::times_bold);
+void LabWindow::startReaction() {
+      try {
+            if (selectedSubstance1 == nullptr || selectedSubstance2 == nullptr) {
+                  throw std::runtime_error("Du må velge to ulike stoffer for å kunne kjøre en reaksjon!");
+            }
 
-    getSubstances();
-    setupSubstanceButtons();
-    drawSelectedSubstances();
+            std::cout << "Starter reaksjon mellom " << selectedSubstance1->getName() << " og " << selectedSubstance2->getName() << std::endl;
 
+      }
+      catch (const std::runtime_error& e) {
+            std::cout << "Feil: " << e.what() << std::endl;
+      }
 }
 
-JournalWindow::JournalWindow()
-      : TDT4102::AnimationWindow{800,600,400, 600, "Labjournal"} {}
+void LabWindow::drawReactionButton() {
+      reactionButton.setButtonColor(TDT4102::Color::white);
+      reactionButton.setButtonColorBorder(TDT4102::Color::navy);
+      reactionButton.setButtonColorHover(TDT4102::Color::grey);
+      reactionButton.setLabelColor(TDT4102::Color::black);
+      add(reactionButton);
+}
+
+void LabWindow::drawFlask() {
+      draw_image(TDT4102::Point{370,320}, images.flask, flaskWidth, flaskHeight);
+}
+
+
+void LabWindow::drawLab() {
+    draw_image({0,0}, images.backgroundLab, width(), height());
+    draw_text({130,40}, "Velkommen til kjemilab!", TDT4102::Color::gold, 50, TDT4102::Font::arial_bold);
+
+    drawSubstanceButtons();
+    drawSelectedSubstances();
+    drawFlask();
+}
+
+
+/* JournalWindow::JournalWindow()
+      : TDT4102::AnimationWindow{800,600,400, 600, "Labjournal"} {} */

@@ -44,6 +44,8 @@ TDT4102::AnimationWindow::AnimationWindow(int x, int y, int width, int height, c
     SDL_SetRenderDrawColor(rendererHandle, backgroundColor.redChannel, backgroundColor.greenChannel, backgroundColor.blueChannel, backgroundColor.alphaChannel);
     SDL_RenderClear(rendererHandle);
 
+    SDL_SetRenderDrawBlendMode(rendererHandle, SDL_BLENDMODE_BLEND);
+
     SDL_RendererInfo rendererInfo;
     SDL_GetRendererInfo(rendererHandle, &rendererInfo);
 
@@ -257,11 +259,26 @@ void TDT4102::AnimationWindow::draw_image(TDT4102::Point topLeftPoint, TDT4102::
     image.draw(rendererHandle, topLeftPoint, imageWidth, imageHeight, rotationAngleDegrees, rotationOrigin);
 }
 
+void TDT4102::AnimationWindow::draw_image_region(TDT4102::Point topLeftPoint, TDT4102::Image& image, int imageWidth, int imageHeight, TDT4102::Point sourceTopLeftPoint,  int sourceWidth, int sourceHeight, TDT4102::FlipImage flip) {
+    SDL_RendererFlip sdl_flip = SDL_FLIP_NONE;
+    switch (flip){
+        case TDT4102::FlipImage::HORIZONTAL:
+            sdl_flip = SDL_FLIP_HORIZONTAL;
+            break;
+        case TDT4102::FlipImage::VERTICAL:
+            sdl_flip = SDL_FLIP_VERTICAL;
+            break;
+        default:
+            sdl_flip = SDL_FLIP_NONE;
+    }
+    image.drawRegion(rendererHandle, topLeftPoint, imageWidth, imageHeight, sourceTopLeftPoint, sourceWidth, sourceHeight, sdl_flip);
+}
+
 void TDT4102::AnimationWindow::draw_text(TDT4102::Point topLeftPoint, std::string textToShow, TDT4102::Color color, unsigned int fontSize, TDT4102::Font font) {
     textWindowCounter++;
     std::stringstream windowName;
     windowName << "text" << textWindowCounter;
-    startNuklearDraw(topLeftPoint, windowName.str(), textToShow.size()*fontSize, fontSize);
+    startNuklearDraw(topLeftPoint, windowName.str(), textToShow.size()*fontSize + 20, fontSize + 20);
     fontCache.setFont(context, font, fontSize);
     nk_color textColour{color.redChannel, color.greenChannel, color.blueChannel, color.alphaChannel};
     nk_text_colored(context, textToShow.c_str(), textToShow.size(), NK_TEXT_ALIGN_LEFT, textColour);
