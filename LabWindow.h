@@ -2,6 +2,7 @@
 #include "AnimationWindow.h"
 #include "widgets/Button.h"
 #include "Substances.h"
+#include "Reactions.h"
 #include <array>
 #include <vector>
 
@@ -48,10 +49,13 @@ private:
     static constexpr int gap = 120;
 
     TDT4102::Button reactionButton;
+
+    ReactionDatabase database;
 public:
     LabWindow();
     void setupSubstanceButtons();
     void getSubstances();
+    void loadReactions();
     void drawLab();
     void drawSubstanceButtons();
     void drawSelectedSubstances();

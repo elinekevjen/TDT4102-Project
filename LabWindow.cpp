@@ -32,19 +32,41 @@ bool SubstanceButton::contains(TDT4102::Point point) const {
 LabWindow::LabWindow()
       : TDT4102::AnimationWindow{100,100, 830, 620, "Kjemilab"},
       reactionButton(TDT4102::Point{60,270}, 150, 50, "Kjør reaksjon!")  {
-            drawReactionButton();
-            getSubstances();
-            setupSubstanceButtons();
-            reactionButton.setCallback([this] {startReaction(); });
+
+      drawReactionButton();
+      getSubstances();
+      loadReactions();
+      setupSubstanceButtons();
+      reactionButton.setCallback([this] {startReaction(); });
+
+
 }
 
 void LabWindow::getSubstances(){
-    std::ifstream ifs("files/substances.txt");
-    std::string line;
+
+      try {
+      std::ifstream ifs("files/substances.txt");
+      std::string line;
+      
+            if (!ifs) {
+                  throw std::runtime_error("Kunne ikke åpne fil");
+            }
     
-    while (std::getline(ifs, line)) {
-        substances.push_back(createSubstanceFromLine(line));
-    }
+      while (std::getline(ifs, line)) {
+            substances.push_back(createSubstanceFromLine(line));
+      }
+      } catch (const std::runtime_error& e) {
+            std::cout << "Feil ved lasting av Substances: " << e.what() << std::endl;
+      }
+}
+
+void LabWindow::loadReactions(){
+      try {
+            database.loadFromFile("files/reactions.txt");
+      } catch (std::runtime_error& e) {
+            std::cout << "Feil ved lasting av Reactions: " << e.what() << std::endl;
+      }
+
 }
 
 void LabWindow::setupSubstanceButtons(){
@@ -116,6 +138,7 @@ void LabWindow::startReaction() {
             }
 
             std::cout << "Starter reaksjon mellom " << selectedSubstance1->getName() << " og " << selectedSubstance2->getName() << std::endl;
+            database.findReaction(selectedSubstance1->getName(), selectedSubstance2->getName());
 
       }
       catch (const std::runtime_error& e) {
