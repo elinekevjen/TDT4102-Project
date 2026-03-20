@@ -1,6 +1,6 @@
-Acid;Saltsyre;HCl
-Basic;Lut;NaOH
-Neutral;Natriumklorid;NaCl
-Inorganic;Solvnitrat;AgNO3
-Neutral;Vann;H20
-Inorganic;Magnesium;Mg
+Acid; Saltsyre ;HCl
+Basic;    Lut    ;NaOH
+Neutral; Natriumklorid ;NaCl
+Inorganic;   Solvnitrat  ;AgNO3
+Neutral;   Vann  ;H20
+Inorganic;  Magnesium ;Mg

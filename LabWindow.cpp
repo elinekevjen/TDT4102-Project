@@ -1,34 +1,5 @@
 #include "LabWindow.h"
 
-
-Images::Images() 
-    : backgroundLab("visuals/laboratory.png"),
-     backgroundJournal("visuals/journal.png"),
-     flask("visuals/Kolbe2.png"),
-     tubeGreen("visuals/laboratory.jpeg"),
-     tubeBlue("visuals/laboratory.jpeg"),
-     tubeYellow("visuals/laboratory.jpeg"),
-     tubeBlank("visuals/laboratory.jpeg"),
-      
-      
-      bubbles{
-        TDT4102::Image{"visuals/kolbe.png"},
-        TDT4102::Image{"visuals/kolbe.png"},
-        TDT4102::Image{"visuals/kolbe.png"},
-        TDT4102::Image{"visuals/kolbe.png"}
-      },
-      explosion{
-        TDT4102::Image{"visuals/kolbe.png"},
-        TDT4102::Image{"visuals/kolbe.png"},
-        TDT4102::Image{"visuals/kolbe.png"},
-        TDT4102::Image{"visuals/kolbe.png"}
-      } {}
-
-bool SubstanceButton::contains(TDT4102::Point point) const {
-      return point.x >= pos.x && point.x <= pos.x + width &&
-      point.y >= pos.y && point.y <= pos.y + height;
-}
-
 LabWindow::LabWindow()
       : TDT4102::AnimationWindow{100,100, 830, 620, "Kjemilab"},
       reactionButton(TDT4102::Point{60,270}, 150, 50, "Kjør reaksjon!")  {
@@ -38,8 +9,11 @@ LabWindow::LabWindow()
       loadReactions();
       setupSubstanceButtons();
       reactionButton.setCallback([this] {startReaction(); });
+}
 
-
+bool SubstanceButton::contains(TDT4102::Point point) const {
+      return point.x >= pos.x && point.x <= pos.x + width &&
+      point.y >= pos.y && point.y <= pos.y + height;
 }
 
 void LabWindow::getSubstances(){
@@ -71,15 +45,15 @@ void LabWindow::loadReactions(){
 
 void LabWindow::setupSubstanceButtons(){
       for (int i = 0; i <= static_cast<int>(substances.size())-1; i++) {
-            substanceButtons.push_back({{startX + i*gap , y}, flaskWidth, flaskHeight, substances.at(i).get()});
+            substanceButtons.push_back({{startX + i*gap , y}, 20, 30, substances.at(i).get()});
       }
 }
 
 void LabWindow::drawSubstanceButtons() {
       for (const auto& button : substanceButtons) {
             if (button.substance != nullptr) {
-            draw_image(button.pos, images.flask, button.width, button.height);
-            draw_text({button.pos.x-10, button.pos.y + button.height + 10}, button.substance->getName());
+            draw_image(button.pos, button.substance->getImage(images), button.width, button.height);
+            draw_text({button.pos.x, button.pos.y + button.height}, button.substance->getName());
             }
       }
 }
@@ -136,13 +110,13 @@ void LabWindow::startReaction() {
             if (selectedSubstance1 == nullptr || selectedSubstance2 == nullptr) {
                   throw std::runtime_error("Du må velge to ulike stoffer for å kunne kjøre en reaksjon!");
             }
-
-            std::cout << "Starter reaksjon mellom " << selectedSubstance1->getName() << " og " << selectedSubstance2->getName() << std::endl;
-            database.findReaction(selectedSubstance1->getName(), selectedSubstance2->getName());
+            Reaction result = database.findReaction(selectedSubstance1->getName(), selectedSubstance2->getName());
+            reactionMessage = "Det skjedde en reaksjon! \n" + result.getDescription();
 
       }
       catch (const std::runtime_error& e) {
-            std::cout << "Feil: " << e.what() << std::endl;
+            reactionMessage +=  "Feil: ";
+            reactionMessage += e.what();
       }
 }
 
@@ -166,6 +140,8 @@ void LabWindow::drawLab() {
     drawSubstanceButtons();
     drawSelectedSubstances();
     drawFlask();
+
+    draw_text({400, 100}, reactionMessage);
 }
 
 

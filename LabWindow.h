@@ -3,30 +3,15 @@
 #include "widgets/Button.h"
 #include "Substances.h"
 #include "Reactions.h"
+#include "Images.h"
 #include <array>
 #include <vector>
 
-struct Images {
-	Images();
-
-	TDT4102::Image backgroundLab;
-    TDT4102::Image backgroundJournal;
-    TDT4102::Image flask;
-    TDT4102::Image tubeGreen;
-    TDT4102::Image tubeBlue;
-    TDT4102::Image tubeYellow;
-    TDT4102::Image tubeBlank;
-
-
-
-    std::array<TDT4102::Image, 4> bubbles;
-    std::array<TDT4102::Image, 4> explosion;
-};
 
 struct SubstanceButton {
     TDT4102::Point pos;
-    int width = 20;
-    int height = 30;
+    int width = 40;
+    int height = 60;
     Substance* substance = nullptr;
 
     bool contains(TDT4102::Point point) const;
@@ -49,8 +34,8 @@ private:
     static constexpr int gap = 120;
 
     TDT4102::Button reactionButton;
-
     ReactionDatabase database;
+    std::string reactionMessage;
 public:
     LabWindow();
     void setupSubstanceButtons();

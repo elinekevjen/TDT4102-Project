@@ -68,3 +68,19 @@ Inorganic::Inorganic(std::string name, std::string formula)
 std::string Inorganic::getCategory() const {
     return "Inorganic";
 }
+
+TDT4102::Image& Acid::getImage(Images& image) const {
+    return image.tubeRed;
+}
+
+TDT4102::Image& Basic::getImage(Images& image) const {
+    return image.tubeDBlue;
+}
+
+TDT4102::Image& Neutral::getImage(Images& image) const {
+    return image.tubeLBlue;
+}
+
+TDT4102::Image& Inorganic::getImage(Images& image) const {
+    return image.tubeGreen;
+}
