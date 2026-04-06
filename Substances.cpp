@@ -32,7 +32,7 @@ std::unique_ptr<Substance> createSubstanceFromLine(const std::string& line){
     else if (type == "Basic") {
         return std::make_unique<Basic>(name, formula);
     }
-    else if (type == "inorganic") {
+    else if (type == "Inorganic") {
         return std::make_unique<Inorganic>(name, formula);
     }
     else{

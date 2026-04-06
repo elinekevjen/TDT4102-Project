@@ -14,16 +14,31 @@ Images::Images()
       
       bubbles{
         TDT4102::Image{"visuals/kolbe.png"},
-        TDT4102::Image{"visuals/kolbe.png"},
-        TDT4102::Image{"visuals/kolbe.png"},
+        TDT4102::Image{"visuals/LBlue.png"},
+        TDT4102::Image{"visuals/Yellow.png"},
       },
       explosion{
         TDT4102::Image{"visuals/kolbe.png"},
-        TDT4102::Image{"visuals/kolbe.png"},
-        TDT4102::Image{"visuals/kolbe.png"},
+        TDT4102::Image{"visuals/LBlue.png"},
+        TDT4102::Image{"visuals/Yellow.png"},
       }, 
       precipitate{
         TDT4102::Image{"visuals/kolbe.png"},
+        TDT4102::Image{"visuals/LBlue.png"},
+        TDT4102::Image{"visuals/Yellow.png"},
+      },
+      neutralization{
         TDT4102::Image{"visuals/kolbe.png"},
+        TDT4102::Image{"visuals/LBlue.png"},
+        TDT4102::Image{"visuals/Yellow.png"},
+      },
+      dissolution{
         TDT4102::Image{"visuals/kolbe.png"},
+        TDT4102::Image{"visuals/LBlue.png"},
+        TDT4102::Image{"visuals/Yellow.png"},
+      }, 
+      defaultRx{
+        TDT4102::Image{"visuals/kolbe.png"},
+        TDT4102::Image{"visuals/LBlue.png"},
+        TDT4102::Image{"visuals/Yellow.png"},
       }{}

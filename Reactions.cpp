@@ -42,7 +42,7 @@ std::istream& operator>>(std::istream& inStream, Reaction& reaction) {
     std::getline(stringStream, reaction.reactionType, ';');
     std::getline(stringStream, reaction.description, ';');
 
-    reaction.reacts = (reactsStr == "true");
+    reaction.reacts = (reactsStr == "Reaksjon");
 
     return inStream;
 }

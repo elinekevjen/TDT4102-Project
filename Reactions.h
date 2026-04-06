@@ -6,6 +6,7 @@
 #include <fstream>
 #include <vector>
 
+
 class Reaction {
 private:
     std::string substance1;

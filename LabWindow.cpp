@@ -2,9 +2,9 @@
 
 LabWindow::LabWindow()
       : TDT4102::AnimationWindow{100,100, 830, 620, "Kjemilab"},
-      reactionButton(TDT4102::Point{60,270}, 150, 50, "Kjør reaksjon!"),
+      reactionButton(TDT4102::Point{60,180}, 150, 50, "Kjør reaksjon!"),
       quitButton(TDT4102::Point{700,30}, 100, 50, "Avslutt"),
-      restartButton(TDT4102::Point{60,320}, 150, 50, "Ny reaksjon")  {
+      restartButton(TDT4102::Point{60,220}, 150, 50, "Ny reaksjon")  {
 
       drawReactionButton();
       drawQuitButton();
@@ -47,16 +47,26 @@ void LabWindow::loadReactions(){
 }
 
 void LabWindow::setupSubstanceButtons(){
+      int margin = width() * 0.05;
+      int spacing = (width() - 2*margin) / substances.size();
+      int buttonW = spacing * 0.6;
+      int buttonH = height() * 0.2;
+      int yPos = height() * 0.70;
+
       for (int i = 0; i <= (substances.size()-1); i++) {
-            substanceButtons.push_back({{startX + i*gap , y}, 40, 60, substances.at(i).get()});
+            substanceButtons.push_back({{margin + i*spacing , yPos}, buttonW, buttonH, substances.at(i).get()});
       }
 }
 
 void LabWindow::drawSubstanceButtons() {
+      int margin = width() * 0.05;
+      int spacing = (width() - 2*margin) / substances.size();
+      int buttonW = spacing * 0.7;
+      int buttonH = height() * 0.25;
       for (const auto& button : substanceButtons) {
             if (button.substance != nullptr) {
-            draw_image(button.pos, button.substance->getImage(images), 60, 80);
-            draw_text({button.pos.x, button.pos.y + button.height}, button.substance->getName());
+            draw_image(button.pos, button.substance->getImage(images), buttonW, buttonH);
+            draw_text({button.pos.x, button.pos.y + (buttonH-4)}, button.substance->getName());
             }
       }
 }
@@ -103,9 +113,9 @@ void LabWindow::drawSelectedSubstances(){
       } else {
             text2 += "Ingen valgt";
       }
-      draw_rectangle({60,180}, 180, 80, TDT4102::Color::white, TDT4102::Color::navy);
-      draw_text({60,180}, text1);
-      draw_text({60,230}, text2);
+      draw_rectangle({60,120}, 180, 60, TDT4102::Color::white, TDT4102::Color::navy);
+      draw_text({60,120}, text1);
+      draw_text({60,150}, text2);
 }
 
 void LabWindow::startReaction() {
@@ -116,11 +126,18 @@ void LabWindow::startReaction() {
             Reaction result = database.findReaction(selectedSubstance1->getName(), selectedSubstance2->getName());
             reactionMessage = result.getDescription();
 
+            currentAnimation = getAnimation(result.getReactionType());
+            animationFrame = 0;
+            animationCounter = 0;
+
+
       }
       catch (const std::runtime_error& e) {
             reactionMessage +=  "Feil: ";
             reactionMessage += e.what();
+            currentAnimation = nullptr;
       }
+
 }
 
 void LabWindow::drawReactionButton() {
@@ -151,7 +168,13 @@ void LabWindow::drawRestartButton() {
 }
 
 void LabWindow::drawFlask() {
-      draw_image(TDT4102::Point{370,320}, images.flask, flaskWidth, flaskHeight);
+    int fw = width() * 0.15;
+    int fh = height() * 0.30;
+
+    int x = width() * 0.40;
+    int y = height() * 0.50;
+
+    draw_image({x, y}, images.flask, fw, fh);
 }
 
 void LabWindow::restart() {
@@ -159,6 +182,7 @@ void LabWindow::restart() {
       selectedSubstance2 = nullptr;
       selectingFirst = true;
       reactionMessage = "";
+      currentAnimation = nullptr;
 }
 
 void LabWindow::drawLab() {
@@ -170,8 +194,44 @@ void LabWindow::drawLab() {
     drawFlask();
 
     draw_text({400, 100}, reactionMessage);
+    drawAnimation();
+}
+
+std::array<TDT4102::Image,3>* LabWindow::getAnimation(const std::string& type){
+      if (type == "Nøytralisering") {
+            return &images.neutralization;
+      }
+      if (type == "Bunnfall") {
+            return &images.precipitate;
+      }
+      if (type == "Oppløsning") {
+            return &images.dissolution;
+      }
+      if (type == "Gassutvikling") {
+            return &images.bubbles;
+      }
+      if (type == "Eksplosjon") {
+            return &images.explosion;
+      }
+
+      return &images.defaultRx;
+}
+
+void LabWindow::drawAnimation(){
+      if (!currentAnimation) {
+            return;
+      }
+      animationCounter ++;
+      if (animationCounter > 10) {
+            animationFrame = (animationFrame + 1) % 3;
+            animationCounter = 0;
+      }
+
+      draw_image(TDT4102::Point{370, 320}, (*currentAnimation)[animationFrame], 150, 150);
+
 }
 
 
 /* JournalWindow::JournalWindow()
-      : TDT4102::AnimationWindow{800,600,400, 600, "Labjournal"} {} */
+      : TDT4102::AnimationWindow{800,600,400, 600, "Labjournal"} {} 
+*/

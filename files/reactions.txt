@@ -1,6 +1,5 @@
-HCl;NaOH;Reaksjon;Nøytralisering;Temperaturen øker
-AgNO3;NaCl;Reaksjon;Bunnfall;Hvitt bunnfall dannes
-H2O;NaCl;Ingen reaksjon;Oppløsning;Du har laget saltvann, gratulerer!
-Mg;AgNO3;Reaksjon;Eksplosjon;Det ekspoderer!
-HCl;Mg;Reaksjon;Gassutvikling;Det bobler over!
-
+Saltsyre;Lut;Reaksjon;Nøytralisering;Temperaturen øker!
+Solvnitrat;Natriumklorid;Reaksjon;Bunnfall;Hvitt bunnfall dannes
+Vann;Natriumklorid;Ingen reaksjon;Oppløsning;Du har laget saltvann, gratulerer!
+Magnesium;Solvnitrat;Reaksjon;Eksplosjon;Det ekspoderer!
+Saltsyre;Magnesium;Reaksjon;Gassutvikling;Det bobler over!

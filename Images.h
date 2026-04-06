@@ -19,4 +19,7 @@ struct Images {
     std::array<TDT4102::Image, 3> bubbles;
     std::array<TDT4102::Image, 3> explosion;
     std::array<TDT4102::Image, 3> precipitate;
+    std::array<TDT4102::Image, 3> neutralization;
+    std::array<TDT4102::Image, 3> dissolution;
+    std::array<TDT4102::Image, 3> defaultRx;
 };

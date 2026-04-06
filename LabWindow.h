@@ -38,6 +38,11 @@ private:
     TDT4102::Button restartButton;
     ReactionDatabase database;
     std::string reactionMessage;
+
+    std::array<TDT4102::Image, 3>* currentAnimation = nullptr;
+    int animationFrame = 0;
+    int animationCounter = 0;
+
 public:
     LabWindow();
     void setupSubstanceButtons();
@@ -55,6 +60,8 @@ public:
     void startReaction();
     void quit();
     void restart();
+    std::array<TDT4102::Image,3>* getAnimation(const std::string& type);
+    void drawAnimation();
 };
 
 /* class JournalWindow : public TDT4102::AnimationWindow{
