@@ -2,13 +2,16 @@
 
 LabWindow::LabWindow()
       : TDT4102::AnimationWindow{100,100, 830, 620, "Kjemilab"},
-      reactionButton(TDT4102::Point{60,270}, 150, 50, "Kjør reaksjon!")  {
+      reactionButton(TDT4102::Point{60,270}, 150, 50, "Kjør reaksjon!"),
+      quitButton(TDT4102::Point{700,30}, 100, 50, "Avslutt"),
+      restartButton(TDT4102::Point{60,320}, 150, 50, "Ny reaksjon")  {
 
       drawReactionButton();
+      drawQuitButton();
+      drawRestartButton();
       getSubstances();
       loadReactions();
       setupSubstanceButtons();
-      reactionButton.setCallback([this] {startReaction(); });
 }
 
 bool SubstanceButton::contains(TDT4102::Point point) const {
@@ -44,15 +47,15 @@ void LabWindow::loadReactions(){
 }
 
 void LabWindow::setupSubstanceButtons(){
-      for (int i = 0; i <= static_cast<int>(substances.size())-1; i++) {
-            substanceButtons.push_back({{startX + i*gap , y}, 20, 30, substances.at(i).get()});
+      for (int i = 0; i <= (substances.size()-1); i++) {
+            substanceButtons.push_back({{startX + i*gap , y}, 40, 60, substances.at(i).get()});
       }
 }
 
 void LabWindow::drawSubstanceButtons() {
       for (const auto& button : substanceButtons) {
             if (button.substance != nullptr) {
-            draw_image(button.pos, button.substance->getImage(images), button.width, button.height);
+            draw_image(button.pos, button.substance->getImage(images), 60, 80);
             draw_text({button.pos.x, button.pos.y + button.height}, button.substance->getName());
             }
       }
@@ -111,7 +114,7 @@ void LabWindow::startReaction() {
                   throw std::runtime_error("Du må velge to ulike stoffer for å kunne kjøre en reaksjon!");
             }
             Reaction result = database.findReaction(selectedSubstance1->getName(), selectedSubstance2->getName());
-            reactionMessage = "Det skjedde en reaksjon! \n" + result.getDescription();
+            reactionMessage = result.getDescription();
 
       }
       catch (const std::runtime_error& e) {
@@ -125,13 +128,38 @@ void LabWindow::drawReactionButton() {
       reactionButton.setButtonColorBorder(TDT4102::Color::navy);
       reactionButton.setButtonColorHover(TDT4102::Color::grey);
       reactionButton.setLabelColor(TDT4102::Color::black);
+      reactionButton.setCallback([this] {startReaction(); });
       add(reactionButton);
+}
+
+void LabWindow::drawQuitButton() {
+      quitButton.setButtonColor(TDT4102::Color::white);
+      quitButton.setButtonColorBorder(TDT4102::Color::navy);
+      quitButton.setButtonColorHover(TDT4102::Color::grey);
+      quitButton.setLabelColor(TDT4102::Color::black);
+      quitButton.setCallback([this] { close();});
+      add(quitButton);
+}
+
+void LabWindow::drawRestartButton() {
+      restartButton.setButtonColor(TDT4102::Color::white);
+      restartButton.setButtonColorBorder(TDT4102::Color::navy);
+      restartButton.setButtonColorHover(TDT4102::Color::grey);
+      restartButton.setLabelColor(TDT4102::Color::black);
+      restartButton.setCallback([this] { restart();});
+      add(restartButton);
 }
 
 void LabWindow::drawFlask() {
       draw_image(TDT4102::Point{370,320}, images.flask, flaskWidth, flaskHeight);
 }
 
+void LabWindow::restart() {
+      selectedSubstance1 = nullptr;
+      selectedSubstance2 = nullptr;
+      selectingFirst = true;
+      reactionMessage = "";
+}
 
 void LabWindow::drawLab() {
     draw_image({0,0}, images.backgroundLab, width(), height());

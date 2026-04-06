@@ -10,8 +10,8 @@
 
 struct SubstanceButton {
     TDT4102::Point pos;
-    int width = 40;
-    int height = 60;
+    int width = 60;
+    int height = 80;
     Substance* substance = nullptr;
 
     bool contains(TDT4102::Point point) const;
@@ -34,6 +34,8 @@ private:
     static constexpr int gap = 120;
 
     TDT4102::Button reactionButton;
+    TDT4102::Button quitButton;
+    TDT4102::Button restartButton;
     ReactionDatabase database;
     std::string reactionMessage;
 public:
@@ -47,8 +49,12 @@ public:
     void selectSubstance(Substance* substance);
     void click(TDT4102::Point clickPos);
     void drawReactionButton();
+    void drawQuitButton();
+    void drawRestartButton();
     void drawFlask();
     void startReaction();
+    void quit();
+    void restart();
 };
 
 /* class JournalWindow : public TDT4102::AnimationWindow{

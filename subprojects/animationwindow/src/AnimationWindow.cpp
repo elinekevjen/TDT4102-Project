@@ -129,11 +129,12 @@ void TDT4102::AnimationWindow::show_frame() {
 }
 
 void TDT4102::AnimationWindow::update_gui() {
+    bool eventHandled = false;
     for (Widget& widget : widgets) {
         fontCache.setFont(context, Font::arial, 18);
         if (widget.isVisible) {
             startNuklearDraw(widget.position, widget.uniqueWidgetName, widget.width, widget.height);
-            widget.update(context);
+            widget.update(context, eventHandled);
             endNuklearDraw();
         }
     }
@@ -399,13 +400,14 @@ void TDT4102::AnimationWindow::startNuklearDraw(TDT4102::Point location, std::st
     // Compute a rectangle that spans the entire size of the window
     // Some padding is needed to accomplish this.
     const unsigned int drawAreaPadding = 20;
+    const unsigned int windowPaddingX = 2 * context->style.window.padding.x;
 
     // If no draw size was specified, use as much space as available inside the window
     struct nk_rect drawAreaSize;
     if (width == 0 && height == 0) {
         drawAreaSize = nk_rect(float(location.x), float(location.y), float(windowSize.x - location.x + drawAreaPadding), float(windowSize.y - location.y + drawAreaPadding));
     } else {
-        drawAreaSize = nk_rect(float(location.x), float(location.y), float(width), float(height));
+        drawAreaSize = nk_rect(float(location.x), float(location.y), float(width + windowPaddingX), float(height));
     }
 
     // Ensuring that all GUI elements have a reasonable minimum height
